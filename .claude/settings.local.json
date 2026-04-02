@@ -6,5 +6,19 @@
       "Edit(/Users/wangdi/Documents/dev/run-plan/**)",
       "Write(/Users/wangdi/Documents/dev/run-plan/**)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "agent",
+            "prompt": "A file was just edited or created. Here is the tool event: $ARGUMENTS\n\nLook at the file_path and the content/changes. Write a single-line changelog entry summarizing what changed, in this format:\n`[YYYY-MM-DD] <file_path relative to project root>: <one-line summary>`\n\nAppend it as a new line to `/Users/wangdi/Documents/dev/run-plan/AGENT/changelog.md`. Create the file if it does not exist. Do not add any other text — just the one line.",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }
