@@ -1,5 +1,7 @@
-2026-04-02 — Added changelog rule to CLAUDE.md requiring one-line summaries after every task/edit
-2026-04-02 — Phase 1 Task 2: added Google Fonts preconnects and Barlow Condensed (600,800), DM Sans (300,500), DM Mono (400) to index.html
-2026-04-02 — Phase 1 Task 3: added Dusk Run CSS variables (colors + font families) to src/index.css
-2026-04-02 — Phase 1 Task 4: set title to "STRIDE" and html background to #111110 in index.html
-2026-04-02 — Phase 1 Task 5: added global base styles (full-viewport reset, font rendering, ember selection color) to src/index.css
+2026-04-02 — Phase 2 Task 1: created src/types/plan.ts, src/store/usePlanStore.ts with step state and planData actions; installed Vitest; 9 unit tests passing
+2026-04-02 — Phase 2 Task 3: created AppShell component with top bar (logo, progress bar, step counter), split-screen layout, and splash full-width mode; wired into App.tsx
+2026-04-02 — Phase 2 Task 4: extracted ProgressBar component (ember fill, 300ms ease-out, ARIA attributes); replaced inline bar in AppShell
+2026-04-02 — Phase 2 Task 5: created StickyNav component (Back ghost link + Continue ember button, disabled state); wired into App.tsx
+2026-04-02 — Fix: removed preview panel; top bar now always visible at step 0; AppShell simplified to single-column layout
+2026-04-02 — Restored split-screen preview panel; AppShell back to leftPanel/rightPanel props with 50/50 split on steps 1+
+2026-04-02 — Phase 2 Task 6: added step-enter/step-exit CSS keyframes (280ms, 30px slide); created StepTransition component; wired into App.tsx left panel

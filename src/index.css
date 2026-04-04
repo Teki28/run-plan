@@ -47,3 +47,34 @@ body {
   background: var(--color-ember);
   color: var(--color-canvas);
 }
+
+@keyframes step-enter {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes step-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+}
+
+.step-enter {
+  animation: step-enter 280ms ease-out forwards;
+}
+
+.step-exit {
+  animation: step-exit 280ms ease-out forwards;
+  pointer-events: none;
+}

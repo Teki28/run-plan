@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Unit Test Rule
+
+For every piece of functional (non-UI) code written or edited — utilities, logic, data transformations, store actions — write a corresponding unit test. Run the tests after each edit and ensure they all pass before considering the task done.
+
 ## Changelog Rule
 
 After every task or edit, append a one-line summary to `AGENT/changelog` in the format:
