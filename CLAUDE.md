@@ -73,3 +73,56 @@ An immersive, full-viewport onboarding flow ("Dusk Run" concept) that collects u
 **Fonts:** Barlow Condensed (display/headings/metrics) · DM Sans (body/labels) · DM Mono (step counters)
 
 **Rules:** No blue or purple. No standard AI color schemes. Full spec in `.claude/rules/ui-design.md`.
+
+---
+
+## Project Structure
+
+```
+src/
+  main.tsx                        # Entry point
+  App.tsx                         # Step router (switch on currentStep)
+  App.css                         # Empty — styles live in index.css
+  index.css                       # Tailwind import + design tokens + global reset + keyframes
+
+  types/
+    plan.ts                       # RaceGoal, ExperienceLevel, InjuryType, PlanData
+
+  store/
+    usePlanStore.ts               # Step state (currentStep, planData, goNext, goBack, updatePlanData)
+    usePlanStore.test.ts
+
+  utils/
+    units.ts                      # kmToMi, miToKm, clampMileage, toDisplayUnit, toStorageKm
+    units.test.ts
+    dates.ts                      # weeksUntil, isSelectable, weeksToGoLabel, daysInMonth, toDateString
+    dates.test.ts
+
+  components/
+    AppShell.tsx                  # Full-viewport shell: top bar (logo, progress, counter) + split-screen
+    ProgressBar.tsx               # Ember fill bar with ARIA attributes
+    StickyNav.tsx                 # Back ghost link + Continue ember button (locked to panel bottom)
+    StepLayout.tsx                # Shared step wrapper: question heading + helper copy + StickyNav
+    StepTransition.tsx            # Key-based remount with fade+lift enter animation
+    SelectCard.tsx                # Tap-to-select card with clip-path flood-fill animation
+    ThreeStopSelector.tsx         # Horizontal 3-option selector with ember underline
+    CircularDial.tsx              # SVG arc dial with drag, +/− buttons, UnitToggle pill
+    DayPills.tsx                  # Mon–Sun toggleable pills with shake on <2 selected
+    InlineCalendar.tsx            # Always-visible calendar, greyed invalid dates, gold weeks badge
+    ChipGrid.tsx                  # Multi-select chip grid with reassurance note and Skip link
+
+  steps/
+    SplashScreen.tsx              # Step 0: full-screen, logo, runner icon, word-by-word animation, CTA
+    Step1.tsx                     # Race goal — 5 SelectCards
+    Step2.tsx                     # Experience level — ThreeStopSelector
+    Step3.tsx                     # Weekly mileage — CircularDial
+    Step4.tsx                     # Training days — DayPills
+    Step5.tsx                     # Race date — InlineCalendar
+    Step6.tsx                     # Injury history — ChipGrid
+
+  assets/
+    hero.png, react.svg, vite.svg # Unused Vite boilerplate (not yet cleaned up)
+
+index.html                        # Title: STRIDE, Google Fonts, html bg #111110
+vite.config.ts                    # Vite + React + Tailwind plugins; Vitest test config
+```
