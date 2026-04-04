@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { usePlanStore } from './store/usePlanStore'
 import { AppShell } from './components/AppShell'
 import { StepTransition } from './components/StepTransition'
@@ -9,11 +10,14 @@ import { Step3 } from './steps/Step3'
 import { Step4 } from './steps/Step4'
 import { Step5 } from './steps/Step5'
 import { Step6 } from './steps/Step6'
+import { PlanReveal, PlanCalendar } from './steps/PlanReveal'
+import { generatePlan } from './utils/generatePlan'
 
 const TOTAL_STEPS = 8
 
 function App() {
   const { currentStep, planData, goNext, goBack, updatePlanData } = usePlanStore()
+  const plan = useMemo(() => generatePlan(planData), [planData])
 
   function renderStep() {
     const props = { planData, onUpdate: updatePlanData, onNext: goNext, onBack: goBack }
@@ -24,9 +28,19 @@ function App() {
       case 4: return <Step4 {...props} />
       case 5: return <Step5 {...props} />
       case 6: return <Step6 {...props} />
+      case 7: return (
+        <PlanReveal
+          planData={planData}
+          totalWeeks={plan.length}
+          onBack={goBack}
+          onSave={() => {}}
+        />
+      )
       default: return null
     }
   }
+
+  const isReveal = currentStep === 7
 
   return (
     <AppShell
@@ -42,16 +56,18 @@ function App() {
         )
       }
       rightPanel={
-        <>
-          {/* Full panel — desktop */}
-          <div className="panel-right-full flex flex-col h-full">
-            <PreviewPanel planData={planData} currentStep={currentStep} />
-          </div>
-          {/* Summary strip — tablet only (shown via CSS) */}
-          <div className="panel-right-strip" style={{ display: 'none', width: '100%' }}>
-            <PreviewStrip planData={planData} currentStep={currentStep} />
-          </div>
-        </>
+        isReveal ? (
+          <PlanCalendar planData={planData} />
+        ) : (
+          <>
+            <div className="panel-right-full flex flex-col h-full">
+              <PreviewPanel planData={planData} currentStep={currentStep} />
+            </div>
+            <div className="panel-right-strip" style={{ display: 'none', width: '100%' }}>
+              <PreviewStrip planData={planData} currentStep={currentStep} />
+            </div>
+          </>
+        )
       }
     />
   )

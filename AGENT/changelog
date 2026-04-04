@@ -1,1 +1,4 @@
-2026-04-02 — Redesigned PreviewPanel: always-visible plan card with ghost→real transitions; larger typography (42px title, 28px stats); ambient glow grows with each completed step; all elements present from step 1 as placeholders; ghost hint text when empty
+2026-04-02 — Phase 6 Task 1: created generatePlan utility (10% weekly progression, 2-week taper, session type assignment by level/injuries, proportional distance distribution); 77 tests passing
+2026-04-02 — Phase 6 Task 2: created WeekRow component (7-day grid, effort-coded colours, cascade entrance animation with 50ms row stagger)
+2026-04-02 — Phase 6 Task 3: extracted SessionTile component (effort label + distance, colour-coded bg/border/text per type); WeekRow now uses SessionTile
+2026-04-02 — Phase 6 Task 4: created PlanReveal (summary card, stats grid, legend, Save CTA) and PlanCalendar (scrollable WeekRows + shimmer sweep); wired into App.tsx at step 7

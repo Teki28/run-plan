@@ -72,6 +72,16 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes shimmer-sweep {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+@keyframes week-row-enter {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 @keyframes step-enter {
   from {
     opacity: 0;
