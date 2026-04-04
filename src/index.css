@@ -48,6 +48,30 @@ body {
   color: var(--color-canvas);
 }
 
+/* Responsive layout helpers */
+.panel-left  { width: 50%; }
+.panel-right { width: 50%; }
+
+/* Tablet: stack vertically, preview becomes a summary strip */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .content-area   { flex-direction: column !important; }
+  .panel-left     { width: 100% !important; flex: 1; }
+  .panel-right    { width: 100% !important; flex: none; min-height: 0; }
+  .panel-right-strip { display: flex !important; }
+  .panel-right-full  { display: none !important; }
+}
+
+/* Mobile: hide preview entirely (until step 7) */
+@media (max-width: 767px) {
+  .panel-left  { width: 100% !important; }
+  .panel-right { display: none !important; }
+}
+
+@keyframes preview-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes step-enter {
   from {
     opacity: 0;

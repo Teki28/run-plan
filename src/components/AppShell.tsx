@@ -47,21 +47,21 @@ export function AppShell({ currentStep, totalSteps, leftPanel, rightPanel }: App
       )}
 
       {/* Content area */}
-      <div className="flex flex-1 min-h-0">
+      <div className="content-area flex flex-1 min-h-0">
         {isSplash ? (
           <div className="flex-1">{leftPanel}</div>
         ) : (
           <>
             {/* Left panel — question area */}
             <div
-              className="flex flex-col overflow-hidden"
-              style={{ width: '50%', borderRight: '1px solid var(--color-border)' }}
+              className="panel-left flex flex-col overflow-hidden"
+              style={{ borderRight: '1px solid var(--color-border)' }}
             >
               {leftPanel}
             </div>
 
-            {/* Right panel — live preview */}
-            <div className="flex flex-col overflow-hidden" style={{ width: '50%' }}>
+            {/* Right panel — live preview (full on desktop, strip on tablet, hidden on mobile) */}
+            <div className="panel-right flex flex-col overflow-hidden">
               {rightPanel}
             </div>
           </>

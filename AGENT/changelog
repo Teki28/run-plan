@@ -1,2 +1,1 @@
-2026-04-02 — Fix: rewrote StepTransition to use key-based remount (no animationEnd events); smooth fade + 12px lift animation at 300ms ease-out
-2026-04-02 — Updated CLAUDE.md project structure section to reflect current src/ layout (all components, steps, utils, store)
+2026-04-02 — Redesigned PreviewPanel: always-visible plan card with ghost→real transitions; larger typography (42px title, 28px stats); ambient glow grows with each completed step; all elements present from step 1 as placeholders; ghost hint text when empty

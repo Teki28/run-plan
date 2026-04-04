@@ -1,6 +1,7 @@
 import { usePlanStore } from './store/usePlanStore'
 import { AppShell } from './components/AppShell'
 import { StepTransition } from './components/StepTransition'
+import { PreviewPanel, PreviewStrip } from './components/PreviewPanel'
 import { SplashScreen } from './steps/SplashScreen'
 import { Step1 } from './steps/Step1'
 import { Step2 } from './steps/Step2'
@@ -41,9 +42,16 @@ function App() {
         )
       }
       rightPanel={
-        <div className="flex items-center justify-center h-full" style={{ color: 'var(--color-muted)' }}>
-          Preview
-        </div>
+        <>
+          {/* Full panel — desktop */}
+          <div className="panel-right-full flex flex-col h-full">
+            <PreviewPanel planData={planData} currentStep={currentStep} />
+          </div>
+          {/* Summary strip — tablet only (shown via CSS) */}
+          <div className="panel-right-strip" style={{ display: 'none', width: '100%' }}>
+            <PreviewStrip planData={planData} currentStep={currentStep} />
+          </div>
+        </>
       }
     />
   )
