@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Changelog Rule
+
+After every task or edit, append a one-line summary to `AGENT/changelog` in the format:
+`YYYY-MM-DD — <short description of what was done>`
+
 ## Commands
 
 ```bash

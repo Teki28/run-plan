@@ -1,1 +1,5 @@
-2026-04-02 — Project initialized: Vite + React 19 + TS + Tailwind v4 scaffold only; STRIDE spec docs written, no app features implemented yet.
+2026-04-02 — Added changelog rule to CLAUDE.md requiring one-line summaries after every task/edit
+2026-04-02 — Phase 1 Task 2: added Google Fonts preconnects and Barlow Condensed (600,800), DM Sans (300,500), DM Mono (400) to index.html
+2026-04-02 — Phase 1 Task 3: added Dusk Run CSS variables (colors + font families) to src/index.css
+2026-04-02 — Phase 1 Task 4: set title to "STRIDE" and html background to #111110 in index.html
+2026-04-02 — Phase 1 Task 5: added global base styles (full-viewport reset, font rendering, ember selection color) to src/index.css

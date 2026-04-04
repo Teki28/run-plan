@@ -4,7 +4,10 @@
       "Bash(npm run:*)",
       "Skill(update-config)",
       "Edit(/Users/wangdi/Documents/dev/run-plan/**)",
-      "Write(/Users/wangdi/Documents/dev/run-plan/**)"
+      "Write(/Users/wangdi/Documents/dev/run-plan/**)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)"
     ]
   },
   "hooks": {
