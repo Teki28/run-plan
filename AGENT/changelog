@@ -1,7 +1,4 @@
-2026-04-02 — Phase 2 Task 1: created src/types/plan.ts, src/store/usePlanStore.ts with step state and planData actions; installed Vitest; 9 unit tests passing
-2026-04-02 — Phase 2 Task 3: created AppShell component with top bar (logo, progress bar, step counter), split-screen layout, and splash full-width mode; wired into App.tsx
-2026-04-02 — Phase 2 Task 4: extracted ProgressBar component (ember fill, 300ms ease-out, ARIA attributes); replaced inline bar in AppShell
-2026-04-02 — Phase 2 Task 5: created StickyNav component (Back ghost link + Continue ember button, disabled state); wired into App.tsx
-2026-04-02 — Fix: removed preview panel; top bar now always visible at step 0; AppShell simplified to single-column layout
-2026-04-02 — Restored split-screen preview panel; AppShell back to leftPanel/rightPanel props with 50/50 split on steps 1+
-2026-04-02 — Phase 2 Task 6: added step-enter/step-exit CSS keyframes (280ms, 30px slide); created StepTransition component; wired into App.tsx left panel
+2026-04-02 — Phase 3 Task 1: created SplashScreen with radial ember glow, SVG runner icon, grain texture overlay, and headline/subtext; wired into App.tsx at step 0
+2026-04-02 — Phase 3 Task 2: added word-by-word headline animation (fade + 8px slide-up, 60ms stagger per word, 200ms duration); subtext fades in after last word
+2026-04-02 — Phase 3 Task 3: added "Build my plan →" CTA button to SplashScreen; ember background, fades in after subtext, calls goNext() via onStart prop
+2026-04-02 — Fix: splash screen is now truly full-screen (no top bar); STRIDE logo placed at upper-left inside SplashScreen; top bar only shown on steps 1+

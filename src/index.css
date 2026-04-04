@@ -78,3 +78,20 @@ body {
   animation: step-exit 280ms ease-out forwards;
   pointer-events: none;
 }
+
+@keyframes word-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.word-reveal {
+  display: inline-block;
+  opacity: 0;
+  animation: word-reveal 200ms ease-out forwards;
+}

@@ -12,37 +12,39 @@ export function AppShell({ currentStep, totalSteps, leftPanel, rightPanel }: App
 
   return (
     <div className="w-screen h-screen overflow-hidden flex flex-col" style={{ background: 'var(--color-canvas)' }}>
-      {/* Top bar — always visible */}
-      <header
-        className="flex items-center px-8 shrink-0"
-        style={{ height: '56px', borderBottom: '1px solid var(--color-border)' }}
-      >
-        <span
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontWeight: 800,
-            fontSize: '20px',
-            color: 'var(--color-ember)',
-            letterSpacing: '0.2em',
-          }}
+      {/* Top bar — hidden on splash */}
+      {!isSplash && (
+        <header
+          className="flex items-center px-8 shrink-0"
+          style={{ height: '56px', borderBottom: '1px solid var(--color-border)' }}
         >
-          STRIDE
-        </span>
+          <span
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
+              fontSize: '20px',
+              color: 'var(--color-ember)',
+              letterSpacing: '0.2em',
+            }}
+          >
+            STRIDE
+          </span>
 
-        <div className="flex-1 mx-8">
-          <ProgressBar current={currentStep} total={totalSteps} />
-        </div>
+          <div className="flex-1 mx-8">
+            <ProgressBar current={currentStep} total={totalSteps} />
+          </div>
 
-        <span
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '12px',
-            color: 'var(--color-muted)',
-          }}
-        >
-          {String(currentStep).padStart(2, '0')} / {String(totalSteps - 1).padStart(2, '0')}
-        </span>
-      </header>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '12px',
+              color: 'var(--color-muted)',
+            }}
+          >
+            {String(currentStep).padStart(2, '0')} / {String(totalSteps - 1).padStart(2, '0')}
+          </span>
+        </header>
+      )}
 
       {/* Content area */}
       <div className="flex flex-1 min-h-0">
