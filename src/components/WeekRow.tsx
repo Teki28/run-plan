@@ -47,6 +47,7 @@ export function WeekRow({ week, rowIndex }: WeekRowProps) {
             key={dayIndex}
             type={session ? session.type : 'rest'}
             distanceKm={session?.distanceKm}
+            targetPaceSec={session?.targetPaceSec}
           />
         )
       })}

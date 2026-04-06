@@ -1,4 +1,4 @@
-import { DayPills } from '../components/DayPills'
+import { CircularDial } from '../components/CircularDial'
 import { StepLayout } from '../components/StepLayout'
 import type { PlanData } from '../types/plan'
 
@@ -12,16 +12,19 @@ interface Step4Props {
 export function Step4({ planData, onUpdate, onNext, onBack }: Step4Props) {
   return (
     <StepLayout
-      question="Which days can you train?"
-      helper="Select at least 2 days. Your plan will be built around your schedule."
+      question="How much do you run each week?"
+      helper="Your current weekly mileage helps us build from where you are now."
       onNext={onNext}
       onBack={onBack}
-      nextDisabled={planData.trainingDays.length < 2}
     >
-      <DayPills
-        selected={planData.trainingDays}
-        onChange={(days) => onUpdate({ trainingDays: days })}
-      />
+      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
+        <CircularDial
+          valueKm={planData.weeklyMileage}
+          unit={planData.unit}
+          onValueChange={(km) => onUpdate({ weeklyMileage: km })}
+          onUnitChange={(unit) => onUpdate({ unit })}
+        />
+      </div>
     </StepLayout>
   )
 }

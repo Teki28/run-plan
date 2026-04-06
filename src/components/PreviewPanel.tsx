@@ -37,15 +37,16 @@ function Lit({ children, active, delay = 0 }: { children: React.ReactNode; activ
 }
 
 export function PreviewPanel({ planData, currentStep }: PreviewPanelProps) {
-  const { raceGoal, experienceLevel, weeklyMileage, unit, trainingDays, raceDate, injuries } = planData
+  const { raceGoal, targetFinishTime, experienceLevel, weeklyMileage, unit, trainingDays, raceDate, injuries } = planData
 
   const hasGoal        = currentStep >= 1 && !!raceGoal
-  const hasLevel       = currentStep >= 2 && !!experienceLevel
+  const hasLevel       = currentStep >= 3 && !!experienceLevel
   const hasTitle       = hasGoal && hasLevel
-  const hasMileage     = currentStep >= 3
-  const hasDays        = currentStep >= 4 && trainingDays.length >= 2
-  const hasDate        = currentStep >= 5 && !!raceDate
-  const hasInjuries    = currentStep >= 6 && injuries.some(i => i !== 'none')
+  const hasMileage     = currentStep >= 4
+  const hasDays        = currentStep >= 5 && trainingDays.length >= 2
+  const hasDate        = currentStep >= 6 && !!raceDate
+  const hasInjuries    = currentStep >= 7 && injuries.some(i => i !== 'none')
+  const hasFinishTime  = currentStep >= 2 && !!planData.targetFinishTime
   const stepsCompleted = [hasGoal, hasLevel, hasMileage, hasDays, hasDate].filter(Boolean).length
   const glowIntensity  = 0.06 + stepsCompleted * 0.03
 
@@ -221,6 +222,28 @@ export function PreviewPanel({ planData, currentStep }: PreviewPanelProps) {
           </div>
         </div>
 
+        {/* Target finish time */}
+        {hasFinishTime && targetFinishTime !== null && (() => {
+          const h = Math.floor(targetFinishTime / 3600)
+          const m = Math.floor((targetFinishTime % 3600) / 60)
+          const s = targetFinishTime % 60
+          const fmt = h > 0
+            ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+            : `${m}:${String(s).padStart(2,'0')}`
+          return (
+            <div style={{ animation: 'preview-fade-in 250ms ease-out both' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-muted)', letterSpacing: '0.08em' }}>
+                  TARGET TIME
+                </span>
+                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', lineHeight: 1, color: 'var(--color-gold)' }}>
+                  {fmt}
+                </span>
+              </div>
+            </div>
+          )
+        })()}
+
         {/* Training days */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-muted)', letterSpacing: '0.08em' }}>
@@ -303,11 +326,11 @@ export function PreviewStrip({ planData, currentStep }: PreviewPanelProps) {
 
   if (currentStep >= 1 && raceGoal)
     items.push({ label: 'Goal', value: RACE_GOAL_LABELS[raceGoal], color: 'var(--color-ember)' })
-  if (currentStep >= 2 && experienceLevel)
+  if (currentStep >= 3 && experienceLevel)
     items.push({ label: 'Level', value: LEVEL_LABELS[experienceLevel] })
-  if (currentStep >= 3 && weeklyMileage > 0)
+  if (currentStep >= 4 && weeklyMileage > 0)
     items.push({ label: 'Base', value: `${weeklyMileage} ${unit}/wk` })
-  if (currentStep >= 5 && raceDate) {
+  if (currentStep >= 6 && raceDate) {
     const weeks = Math.max(0, Math.floor((new Date(raceDate).getTime() - Date.now()) / (7 * 24 * 60 * 60 * 1000)))
     items.push({ label: 'Length', value: `${weeks} wks`, color: 'var(--color-gold)' })
   }

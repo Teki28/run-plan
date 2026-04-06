@@ -1,4 +1,4 @@
-import { InlineCalendar } from '../components/InlineCalendar'
+import { DayPills } from '../components/DayPills'
 import { StepLayout } from '../components/StepLayout'
 import type { PlanData } from '../types/plan'
 
@@ -12,15 +12,15 @@ interface Step5Props {
 export function Step5({ planData, onUpdate, onNext, onBack }: Step5Props) {
   return (
     <StepLayout
-      question="When is your race?"
-      helper="Pick your race date and we'll work backwards to build the perfect plan."
+      question="Which days can you train?"
+      helper="Select at least 2 days. Your plan will be built around your schedule."
       onNext={onNext}
       onBack={onBack}
-      nextDisabled={!planData.raceDate}
+      nextDisabled={planData.trainingDays.length < 2}
     >
-      <InlineCalendar
-        value={planData.raceDate}
-        onChange={(date) => onUpdate({ raceDate: date })}
+      <DayPills
+        selected={planData.trainingDays}
+        onChange={(days) => onUpdate({ trainingDays: days })}
       />
     </StepLayout>
   )

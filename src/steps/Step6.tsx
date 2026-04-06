@@ -1,17 +1,6 @@
-import { ChipGrid } from '../components/ChipGrid'
+import { InlineCalendar } from '../components/InlineCalendar'
 import { StepLayout } from '../components/StepLayout'
-import type { InjuryType, PlanData } from '../types/plan'
-
-const CHIPS = [
-  { value: 'knee',     label: 'Knee' },
-  { value: 'itband',   label: 'IT Band' },
-  { value: 'hip',      label: 'Hip' },
-  { value: 'shin',     label: 'Shin Splints' },
-  { value: 'plantar',  label: 'Plantar Fasciitis' },
-  { value: 'none',     label: 'No injuries' },
-]
-
-const REASSURANCE = "We'll reduce high-impact sessions and add extra recovery days around these areas."
+import type { PlanData } from '../types/plan'
 
 interface Step6Props {
   planData: PlanData
@@ -23,18 +12,15 @@ interface Step6Props {
 export function Step6({ planData, onUpdate, onNext, onBack }: Step6Props) {
   return (
     <StepLayout
-      question="Any injury history?"
-      helper="Optional — but it helps us protect you. Select all that apply."
+      question="When is your race?"
+      helper="Pick your race date and we'll work backwards to build the perfect plan."
       onNext={onNext}
       onBack={onBack}
-      nextLabel="Build my plan →"
+      nextDisabled={!planData.raceDate}
     >
-      <ChipGrid
-        chips={CHIPS}
-        selected={planData.injuries as string[]}
-        onChange={(vals) => onUpdate({ injuries: vals as InjuryType[] })}
-        onSkip={onNext}
-        reassuranceNote={REASSURANCE}
+      <InlineCalendar
+        value={planData.raceDate}
+        onChange={(date) => onUpdate({ raceDate: date })}
       />
     </StepLayout>
   )

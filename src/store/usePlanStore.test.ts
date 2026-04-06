@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { PlanData } from '../types/plan'
 
 // Test the pure step-clamping logic extracted from the store
-const TOTAL_STEPS = 8
+const TOTAL_STEPS = 9
 
 function nextStep(current: number) {
   return Math.min(current + 1, TOTAL_STEPS - 1)
@@ -18,6 +18,7 @@ function applyPatch(prev: PlanData, patch: Partial<PlanData>): PlanData {
 
 const base: PlanData = {
   raceGoal: null,
+  targetFinishTime: null,
   experienceLevel: null,
   weeklyMileage: 20,
   unit: 'km',
@@ -33,8 +34,8 @@ describe('step navigation', () => {
   })
 
   it('goNext clamps at last step', () => {
-    expect(nextStep(7)).toBe(7)
-    expect(nextStep(8)).toBe(7)
+    expect(nextStep(8)).toBe(8)
+    expect(nextStep(9)).toBe(8)
   })
 
   it('goBack decrements step', () => {

@@ -1,6 +1,16 @@
-import { CircularDial } from '../components/CircularDial'
+import { ThreeStopSelector } from '../components/ThreeStopSelector'
 import { StepLayout } from '../components/StepLayout'
-import type { PlanData } from '../types/plan'
+import type { ExperienceLevel, PlanData } from '../types/plan'
+
+const STOPS: [
+  { value: ExperienceLevel; label: string; description: string },
+  { value: ExperienceLevel; label: string; description: string },
+  { value: ExperienceLevel; label: string; description: string },
+] = [
+  { value: 'beginner',     label: 'Beginner',     description: 'New to running or returning after a long break' },
+  { value: 'intermediate', label: 'Intermediate', description: 'Running regularly, ready to push further' },
+  { value: 'advanced',     label: 'Advanced',     description: 'Experienced runner chasing a PB' },
+]
 
 interface Step3Props {
   planData: PlanData
@@ -12,19 +22,17 @@ interface Step3Props {
 export function Step3({ planData, onUpdate, onNext, onBack }: Step3Props) {
   return (
     <StepLayout
-      question="How much do you run each week?"
-      helper="Your current weekly mileage helps us build from where you are now."
+      question="What's your experience level?"
+      helper="Be honest — the right plan starts with the right baseline."
       onNext={onNext}
       onBack={onBack}
+      nextDisabled={!planData.experienceLevel}
     >
-      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
-        <CircularDial
-          valueKm={planData.weeklyMileage}
-          unit={planData.unit}
-          onValueChange={(km) => onUpdate({ weeklyMileage: km })}
-          onUnitChange={(unit) => onUpdate({ unit })}
-        />
-      </div>
+      <ThreeStopSelector
+        stops={STOPS}
+        value={planData.experienceLevel}
+        onChange={(v) => onUpdate({ experienceLevel: v as ExperienceLevel })}
+      />
     </StepLayout>
   )
 }

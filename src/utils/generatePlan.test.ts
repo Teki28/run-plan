@@ -1,49 +1,134 @@
 import { describe, it, expect } from 'vitest'
 import {
-  getWeeklyKm,
+  getGoalParams,
+  computePaceZones,
+  buildMileageArc,
+  getWeekPhase,
   assignSessionTypes,
   distributeDistances,
   generatePlan,
 } from './generatePlan'
 import type { PlanData } from '../types/plan'
 
-// ─── getWeeklyKm ────────────────────────────────────────────────────────────
+// ─── getGoalParams ──────────────────────────────────────────────────────────
 
-describe('getWeeklyKm', () => {
-  it('week 0 equals baseKm', () => {
-    expect(getWeeklyKm(40, 0, 12, 120)).toBe(40)
+describe('getGoalParams', () => {
+  it('returns params for half/intermediate', () => {
+    const p = getGoalParams('half', 'intermediate')
+    expect(p).toEqual({ maxWeeklyKm: 90, peakLongRunKm: 30, taperWeeks: 2 })
   })
 
-  it('increases ~10% each week', () => {
-    const w1 = getWeeklyKm(40, 1, 12, 200)
-    expect(w1).toBe(Math.round(40 * 1.1))
+  it('full/advanced has 3 taper weeks', () => {
+    expect(getGoalParams('full', 'advanced').taperWeeks).toBe(3)
   })
 
-  it('caps at maxKm', () => {
-    expect(getWeeklyKm(40, 20, 24, 50)).toBeLessThanOrEqual(50)
+  it('fitness/beginner has low caps', () => {
+    const p = getGoalParams('fitness', 'beginner')
+    expect(p.maxWeeklyKm).toBe(35)
+    expect(p.peakLongRunKm).toBe(12)
+    expect(p.taperWeeks).toBe(1)
+  })
+})
+
+// ─── computePaceZones ───────────────────────────────────────────────────────
+
+describe('computePaceZones', () => {
+  it('returns null when targetFinishTime is null', () => {
+    expect(computePaceZones('half', null)).toBeNull()
   })
 
-  it('tapers second-to-last week to ~70% of peak', () => {
-    const total = 12
-    const base = 40
-    const max = 200
-    const peakKm = Math.min(base * Math.pow(1.1, total - 3), max)
-    const taper = getWeeklyKm(base, total - 2, total, max)
-    expect(taper).toBe(Math.round(peakKm * 0.7))
+  it('returns null for fitness goal', () => {
+    expect(computePaceZones('fitness', 7200)).toBeNull()
   })
 
-  it('tapers last week to ~50% of peak', () => {
-    const total = 12
-    const base = 40
-    const max = 200
-    const peakKm = Math.min(base * Math.pow(1.1, total - 3), max)
-    const taper = getWeeklyKm(base, total - 1, total, max)
-    expect(taper).toBe(Math.round(peakKm * 0.5))
+  it('calculates correct pace for 5K in 25 min', () => {
+    const zones = computePaceZones('5k', 25 * 60)
+    expect(zones).not.toBeNull()
+    // goalPace = 1500 / 5 = 300 sec/km = 5:00/km
+    expect(zones!.hard).toBe(300)
+    expect(zones!.tempo).toBe(Math.round(300 * 1.07))  // 321
+    expect(zones!.easy).toBe(Math.round(300 * 1.30))   // 390
   })
 
-  it('last week < second-to-last week', () => {
-    const t = 16
-    expect(getWeeklyKm(50, t - 1, t, 150)).toBeLessThan(getWeeklyKm(50, t - 2, t, 150))
+  it('easy pace is slowest, hard pace is fastest', () => {
+    const zones = computePaceZones('10k', 50 * 60)!
+    expect(zones.easy).toBeGreaterThan(zones.tempo)
+    expect(zones.tempo).toBeGreaterThan(zones.hard)
+  })
+})
+
+// ─── buildMileageArc ────────────────────────────────────────────────────────
+
+describe('buildMileageArc', () => {
+  const params = getGoalParams('half', 'intermediate') // max 90, taper 2
+
+  it('returns correct total length', () => {
+    const arc = buildMileageArc(40, 12, params)
+    expect(arc.length).toBe(12)
+  })
+
+  it('first week equals base km', () => {
+    const arc = buildMileageArc(40, 12, params)
+    expect(arc[0]).toBe(40)
+  })
+
+  it('increases ~10% in non-recovery build weeks', () => {
+    const arc = buildMileageArc(40, 12, params)
+    // Week 2 (index 1) should be ~44
+    expect(arc[1]).toBe(Math.round(40 * 1.1))
+  })
+
+  it('every 4th week is a recovery week (lower volume)', () => {
+    const arc = buildMileageArc(40, 16, params)
+    // Week 4 (index 3) should be recovery
+    expect(arc[3]).toBeLessThan(arc[2])
+  })
+
+  it('caps at maxWeeklyKm', () => {
+    const arc = buildMileageArc(80, 16, params)
+    arc.forEach(km => expect(km).toBeLessThanOrEqual(params.maxWeeklyKm))
+  })
+
+  it('last taper weeks are lower than peak', () => {
+    const arc = buildMileageArc(40, 12, params)
+    const peak = Math.max(...arc.slice(0, -2))
+    expect(arc[arc.length - 1]).toBeLessThan(peak)
+    expect(arc[arc.length - 2]).toBeLessThan(peak)
+  })
+
+  it('taper decreases progressively', () => {
+    const arc = buildMileageArc(40, 12, params)
+    expect(arc[arc.length - 1]).toBeLessThan(arc[arc.length - 2])
+  })
+})
+
+// ─── getWeekPhase ───────────────────────────────────────────────────────────
+
+describe('getWeekPhase', () => {
+  it('last N weeks are taper', () => {
+    expect(getWeekPhase(10, 12, 2)).toBe('taper')
+    expect(getWeekPhase(11, 12, 2)).toBe('taper')
+  })
+
+  it('4th week is recovery', () => {
+    expect(getWeekPhase(3, 16, 2)).toBe('recovery')
+    expect(getWeekPhase(7, 16, 2)).toBe('recovery')
+  })
+
+  it('early weeks are build', () => {
+    expect(getWeekPhase(0, 16, 2)).toBe('build')
+    expect(getWeekPhase(1, 16, 2)).toBe('build')
+  })
+
+  it('weeks just before taper are peak', () => {
+    // total 16, taper 2 → taper at 14,15; peak at 11,12,13
+    expect(getWeekPhase(12, 16, 2)).toBe('peak')
+    expect(getWeekPhase(13, 16, 2)).toBe('peak')
+  })
+
+  it('recovery takes priority over peak when week is 4th', () => {
+    // index 11 → weekNum 12 → 12 % 4 === 0 → recovery
+    expect(getWeekPhase(11, 16, 2)).toBe('recovery')
   })
 })
 
@@ -123,15 +208,16 @@ describe('distributeDistances', () => {
   })
 })
 
-// ─── generatePlan ────────────────────────────────────────────────────────────
+// ─── generatePlan ───────────────────────────────────────────────────────────
 
 const basePlan: PlanData = {
   raceGoal: 'half',
+  targetFinishTime: null,
   experienceLevel: 'intermediate',
   weeklyMileage: 40,
   unit: 'km',
   trainingDays: [1, 3, 5],
-  raceDate: '2026-07-02',   // ~13 weeks from 2026-04-02
+  raceDate: '2026-07-02',
   injuries: [],
 }
 
@@ -176,7 +262,7 @@ describe('generatePlan', () => {
     plan.forEach(week => week.sessions.forEach(s => expect(s.distanceKm).toBeGreaterThan(0)))
   })
 
-  it('last two weeks have lower km than peak (taper)', () => {
+  it('taper weeks have lower km than peak', () => {
     const plan = generatePlan(basePlan)
     const n = plan.length
     const peakKm = Math.max(...plan.slice(0, n - 2).map(w => w.totalKm))
@@ -184,7 +270,7 @@ describe('generatePlan', () => {
     expect(plan[n - 2].totalKm).toBeLessThan(peakKm)
   })
 
-  it('weekly km never exceeds maxKm cap', () => {
+  it('weekly km never exceeds maxWeeklyKm cap', () => {
     const plan = generatePlan(basePlan)
     plan.forEach(w => expect(w.totalKm).toBeLessThanOrEqual(90))
   })
@@ -203,5 +289,45 @@ describe('generatePlan', () => {
   it('beginner plan has no hard sessions', () => {
     const plan = generatePlan({ ...basePlan, experienceLevel: 'beginner' })
     plan.forEach(week => week.sessions.forEach(s => expect(s.type).not.toBe('hard')))
+  })
+
+  it('every 4th week is a recovery week (all easy)', () => {
+    const plan = generatePlan(basePlan)
+    plan.forEach(week => {
+      if (week.phase === 'recovery') {
+        week.sessions.forEach(s => expect(s.type).toBe('easy'))
+      }
+    })
+  })
+
+  it('taper weeks have no hard sessions', () => {
+    const plan = generatePlan(basePlan)
+    plan.forEach(week => {
+      if (week.phase === 'taper') {
+        week.sessions.forEach(s => expect(s.type).not.toBe('hard'))
+      }
+    })
+  })
+
+  it('weeks have a phase property', () => {
+    const plan = generatePlan(basePlan)
+    const validPhases = ['build', 'recovery', 'peak', 'taper']
+    plan.forEach(w => expect(validPhases).toContain(w.phase))
+  })
+
+  it('includes targetPaceSec when targetFinishTime is set', () => {
+    const plan = generatePlan({ ...basePlan, targetFinishTime: 2 * 3600 }) // 2h half
+    const firstWeek = plan[0]
+    firstWeek.sessions.forEach(s => {
+      expect(s.targetPaceSec).toBeDefined()
+      expect(s.targetPaceSec).toBeGreaterThan(0)
+    })
+  })
+
+  it('omits targetPaceSec when targetFinishTime is null', () => {
+    const plan = generatePlan(basePlan)
+    plan[0].sessions.forEach(s => {
+      expect(s.targetPaceSec).toBeUndefined()
+    })
   })
 })

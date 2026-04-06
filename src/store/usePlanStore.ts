@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import type { PlanData } from '../types/plan'
 
-const TOTAL_STEPS = 8
+const TOTAL_STEPS = 9
 
 const initialPlanData: PlanData = {
   raceGoal: null,
+  targetFinishTime: null,
   experienceLevel: null,
   weeklyMileage: 20,
   unit: 'km',

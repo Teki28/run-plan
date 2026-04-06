@@ -7,12 +7,19 @@ export const SESSION_COLORS: Record<SessionType, { bg: string; border: string; t
   rest:  { bg: 'transparent',            border: 'var(--color-border)',    text: '#2E2D2A', label: 'Rest'  },
 }
 
-interface SessionTileProps {
-  type: SessionType
-  distanceKm?: number   // omit for rest tiles
+function formatPace(sec: number): string {
+  const m = Math.floor(sec / 60)
+  const s = sec % 60
+  return `${m}:${String(s).padStart(2, '0')}`
 }
 
-export function SessionTile({ type, distanceKm }: SessionTileProps) {
+interface SessionTileProps {
+  type: SessionType
+  distanceKm?: number        // omit for rest tiles
+  targetPaceSec?: number     // seconds/km — shown when available
+}
+
+export function SessionTile({ type, distanceKm, targetPaceSec }: SessionTileProps) {
   const { bg, border, text, label } = SESSION_COLORS[type]
   const isRest = type === 'rest'
 
@@ -55,6 +62,20 @@ export function SessionTile({ type, distanceKm }: SessionTileProps) {
         >
           {distanceKm}
           <span style={{ fontSize: '10px', fontWeight: 400, marginLeft: '1px', opacity: 0.7 }}>km</span>
+        </span>
+      )}
+
+      {!isRest && targetPaceSec !== undefined && (
+        <span
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '9px',
+            color: text,
+            opacity: 0.65,
+            letterSpacing: '0.02em',
+          }}
+        >
+          {formatPace(targetPaceSec)}/km
         </span>
       )}
     </div>
