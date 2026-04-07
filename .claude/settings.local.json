@@ -14,7 +14,8 @@
       "Bash(npx vitest:*)",
       "Bash(brew install:*)",
       "Bash(pdftoppm -png -r 100 -f 1 -l 10 \"/Users/wangdi/Documents/dev/run-plan/stride-full-intermediate.pdf\" /tmp/stride-pdf-page)",
-      "Read(//private/tmp/**)"
+      "Read(//private/tmp/**)",
+      "Bash(git rm:*)"
     ]
   },
   "hooks": {

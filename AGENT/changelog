@@ -1,7 +1,1 @@
 
-2026-04-06 — added training plan generator pseudo-code spec to AGENT/build-plan.md (3-build/1-recovery cycle, goal params, pace zones from targetFinishTime, 80/20 distributor)
-2026-04-06 — added Step 2 (target finish time): FinishTimeInput component (HH:MM:SS segments, reference chips, skip link), shifted steps 2-6 → 3-7, updated PlanData, PreviewPanel, App.tsx
-2026-04-06 — rewrote generatePlan per build-plan.md pseudo-code: buildMileageArc (3-build/1-recovery cycle), getWeekPhase, getGoalParams, computePaceZones, buildSessions (long run cap, phase-based type adjustment), targetPaceSec on SessionTile; updated WeekRow/SessionTile to display pace; 95 tests passing
-2026-04-06 — redesigned PlanReveal as full-width single page: hero header with stats/legend/pace zones, calendar overview grid with shimmer, collapsible week-by-week breakdown cards with phase badges/explanations/session detail rows; reveal step now bypasses split-screen AppShell
-2026-04-06 — added PDF export for "Save my plan": installed jspdf + html2canvas, created exportPdf utility, added hidden off-screen PlanPdfContent with all weeks expanded (no collapse state, no animations, resolved hex colors) for reliable multi-page A4 PDF capture
-2026-04-06 — fixed PDF page breaks: section-aware pagination (data-pdf-section markers) prevents week cards from splitting across pages; filled last-page white blank with canvas background; added running-themed decorative art (track dots, chevrons, shoe prints, ECG heartbeat line, runner silhouette, STRIDE watermark) in page gaps

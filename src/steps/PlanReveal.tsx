@@ -186,7 +186,8 @@ export function PlanReveal({ planData, onBack }: PlanRevealProps) {
       {/* ── Sticky footer ─────────────────────────────────────── */}
       <div style={{
         flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 32px', borderTop: '1px solid var(--color-border)', background: 'var(--color-canvas)',
+        padding: '16px 32px', paddingBottom: 'calc(16px + env(safe-area-inset-bottom, 12px))',
+        borderTop: '1px solid var(--color-border)', background: 'var(--color-canvas)',
       }}>
         <button
           onClick={onBack}

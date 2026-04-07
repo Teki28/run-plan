@@ -15,8 +15,11 @@ export function StickyNav({
 }: StickyNavProps) {
   return (
     <div
-      className="shrink-0 flex items-center justify-between px-8 py-6"
-      style={{ borderTop: '1px solid var(--color-border)' }}
+      className="shrink-0 flex items-center justify-between px-8 pt-6"
+      style={{
+        borderTop: '1px solid var(--color-border)',
+        paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom, 12px))',
+      }}
     >
       {canGoBack ? (
         <button
